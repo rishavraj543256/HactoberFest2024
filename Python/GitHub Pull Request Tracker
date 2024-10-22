@@ -1,0 +1,25 @@
+import requests
+
+def get_pull_requests(repo_owner, repo_name):
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/pulls"
+    headers = {'Accept': 'application/vnd.github.v3+json'}
+    
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 200:
+        pulls = response.json()
+        if pulls:
+            print(f"Open Pull Requests for {repo_name}:")
+            for pr in pulls:
+                print(f"- #{pr['number']} by {pr['user']['login']} | Title: {pr['title']}")
+        else:
+            print(f"No open pull requests found for {repo_name}.")
+    else:
+        print(f"Failed to fetch data. HTTP Status Code: {response.status_code}")
+
+if __name__ == "__main__":
+    # Example repository: 'torvalds/linux'
+    repo_owner = input("Enter the repository owner (e.g., 'torvalds'): ")
+    repo_name = input("Enter the repository name (e.g., 'linux'): ")
+    
+    get_pull_requests(repo_owner, repo_name)
